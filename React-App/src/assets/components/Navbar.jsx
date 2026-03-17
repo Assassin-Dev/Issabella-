@@ -11,7 +11,7 @@ IssaBella
 
 <div className="navbar-links">
     <Link to={"/"}>Home</Link>
-    <Link to={"/checkout"}>Checkout</Link>
+    <Link to={"/checkout"}>Cart</Link>
 </div>
 
 <div className="navbar-auth">

@@ -205,3 +205,18 @@ h1 {
   cursor: pointer;
   font-weight: 500;
 }
+.auth-switch{
+display: flex;
+    justify-content: center;
+}
+.auth-link{
+  color: blue;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+.auth-switch p{
+  text-align: center;
+}
+.error{
+  color: red;
+}
