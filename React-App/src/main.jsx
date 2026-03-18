@@ -2,14 +2,17 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from "react-router-dom"
 import App from './App.jsx'
-import AuthProvider from './context/AuthContext' // ✅
+import AuthProvider from './context/AuthContext'
+import CartProvider from './context/CartContext' // ✅ ADD THIS
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>   {/* ✅ HERE */}
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+    <AuthProvider>
+      <CartProvider> {/* ✅ WRAP HERE */}
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </CartProvider>
     </AuthProvider>
   </StrictMode>
 )

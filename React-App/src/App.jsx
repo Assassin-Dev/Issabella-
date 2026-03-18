@@ -5,9 +5,11 @@ import Auth from './Pages/Auth';
 import Checkout from './Pages/Checkout';
 import Navbar from './assets/components/Navbar';
 import ProductDetails from './Pages/ProductDetails';
+import CartProvider from './context/CartContext';
 
 function App() {
   return (
+    <CartProvider>
     <div className="app">
       <Navbar />
       <Routes>
@@ -19,6 +21,7 @@ function App() {
         <Route path="/product/:id" element={<ProductDetails />} />
       </Routes>
     </div>
+    </CartProvider>
   )
 }
 

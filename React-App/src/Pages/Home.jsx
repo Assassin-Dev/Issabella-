@@ -1,9 +1,11 @@
 import { getProducts } from "../assets/Data/Product";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 function Home() {
   const Products = getProducts();
   const navigate = useNavigate();
+  const { addToCart, cartItems } = useCart();
 
   return (
     <div className="page">
@@ -16,34 +18,48 @@ function Home() {
         <h2>Our Products</h2>
 
         <div className="products-grid">
-          {Products.map((product) => (
-            <div key={product.id} className="product-card">
+          {Products.map((product) => {
 
-              <img 
-                src={product.image} 
-                alt={product.name} 
-                className="product-image"
-              />
+            // ✅ FIX: move inside map
+            const productInCart = cartItems.find(
+              (item) => item.id === product.id
+            );
 
-              <h3>{product.name}</h3>
-              <p>${product.price}</p>
+            const productQuantityLabel = productInCart
+              ? `(${productInCart.quantity})`
+              : "";
 
-              <div className="product-buttons">
-                {/* ✅ FIXED */}
-                <button 
-                  className="btn-details"
-                  onClick={() => navigate(`/product/${product.id}`)}
-                >
-                  View Details
-                </button>
+            return (
+              <div key={product.id} className="product-card">
 
-                <button className="btn-cart">
-                  Add To Cart
-                </button>
+                <img 
+                  src={product.image} 
+                  alt={product.name} 
+                  className="product-image"
+                />
+
+                <h3>{product.name}</h3>
+                <p>${product.price}</p>
+
+                <div className="product-buttons">
+                  <button 
+                    className="btn-details"
+                    onClick={() => navigate(`/product/${product.id}`)}
+                  >
+                    View Details
+                  </button>
+
+                  <button 
+                    className="btn-cart" 
+                    onClick={() => addToCart(product.id)}
+                  >
+                    Add To Cart {productQuantityLabel}
+                  </button>
+                </div>
+
               </div>
-
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
