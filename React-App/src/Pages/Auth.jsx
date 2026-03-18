@@ -1,25 +1,62 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../context/AuthContext";
 
 function Auth() {
   const [mode, setMode] = useState("sign up");
+  const { signup, login, googleLogin } = useContext(AuthContext);
+  const [error, setError] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(`${mode} form data:`, data);
-    alert(`Form submitted! Check console for data.`);
-  };
+  // ✅ Handle email/password submit
+  async function onSubmit(data) {
+    setError("");
+    try {
+      if (mode === "sign up") {
+        await signup(data.email, data.password);
+        alert("Sign up successful!");
+      } else {
+        await login(data.email, data.password);
+        alert("Login successful!");
+      }
+    } catch (err) {
+      console.error(err);
+
+      // ✅ Show Firebase errors
+      if (err.code === "auth/email-already-in-use") {
+        alert("This email is already in use. Please login or use a different email.");
+      } else if (err.code === "auth/user-not-found") {
+        alert("No user found with this email. Please sign up first.");
+      } else if (err.code === "auth/wrong-password") {
+        alert("Incorrect password. Try again.");
+      } else if (err.code === "auth/invalid-email") {
+        alert("Invalid email format.");
+      } else if (err.code === "auth/weak-password") {
+        alert("Password should be at least 6 characters.");
+      } else {
+        alert(err.message);
+      }
+    }
+  }
+
+  // ✅ Google login
+  async function handleGoogleLogin() {
+    try {
+      await googleLogin();
+      alert("Google login successful!");
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  }
 
   return (
     <div className="page">
       <div className="container">
         <div className="auth-container">
           <h1 className="page-title">{mode === "sign up" ? "Sign UP" : "Login"}</h1>
+
           <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group">
               <label htmlFor="email">Email</label>
@@ -53,6 +90,10 @@ function Auth() {
               {mode === "sign up" ? "Sign UP" : "Login"}
             </button>
           </form>
+
+          <button className="btn-google" onClick={handleGoogleLogin} style={{ marginTop: "1rem" }}>
+            Continue with Google
+          </button>
 
           <div className="auth-switch">
             {mode === "sign up" ? (

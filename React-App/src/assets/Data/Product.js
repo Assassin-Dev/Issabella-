@@ -91,3 +91,7 @@ const Products = [
 export function getProducts(){
   return Products;
 }
+
+export function getProductById(id){
+    return Products.find((p) => p.id === Number(id));
+}
